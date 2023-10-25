@@ -20,6 +20,9 @@ from newapp.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',home,name='home'),
-    path('crud',crud,name='crud')
+    path('',HOME,name='home'),
+    path('add',ADD,name='add'),
+    path('edit',EDIT,name='edit'),
+    path('update/<str:id>',UPDATE,name='update'),
+    path('delete/<str:id>',DELETE,name='delete'),
 ]

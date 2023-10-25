@@ -1,34 +1,66 @@
-from django.shortcuts import render,HttpResponse
+from django.shortcuts import render,redirect
+from newapp.models import Employees
 #from newapp.models import Employees
 
-def home(request):
-    if request.method=='GET':
-        name=request.GET.get('name')
-        email=request.GET.get('email')
-        phone=request.GET.get('phone')
+def HOME(request):
+    emp=Employees.objects.all()
+    context={
+        'emp':emp,
+    }
 
-        emp={
-            'name':name,
-            'email':email,
-            'phone':phone
-        }
+    return render(request,'index.html',context)
+     
+def ADD(request):
+    if request.method=='POST':
+        name=request.POST.get('name')
+        email=request.POST.get('email')
+        address=request.POST.get('address')
+        phone=request.POST.get('phone')
 
-
-        return render(request,'index.html',{'emp':emp})
-        #return redirect('crud.html')
-
-# Create your views here.
-def crud(request):
-    if request.method=='GET':
-        name=request.GET.get('name')
-        email=request.GET.get('email')
-        phone=request.GET.get('phone')
-
-        emp={
-            'name':name,
-            'email':email,
-            'phone':phone
-        }
+        emp = Employees(
+            name =name,
+            email=email,
+            address=address,
+            phone=phone
+        )
+        emp.save()
+        return redirect('home')
 
 
-        return render(request,'crud.html',{'emp':emp})
+    return render(request,'index.html')
+
+def EDIT(request):
+    emp=Employees.objects.all()
+
+    context ={
+        'emp':emp,
+    }
+    return redirect(request,'index.html',context)
+
+def UPDATE(request,id):
+    if request.method=='POST':
+        name=request.POST.get('name')
+        email=request.POST.get('email')
+        address=request.POST.get('address')
+        phone=request.POST.get('phone')
+
+        emp = Employees(
+            id = id,
+            name =name,
+            email=email,
+            address=address,
+            phone=phone
+        )
+        emp.save()
+        return redirect('home')
+
+  
+    return redirect(request,'index.html')
+
+def DELETE(request,id):
+    emp=Employees.objects.filter(id = id).delete()
+
+    context={
+        'emp':emp,
+    }
+    return redirect('home')
